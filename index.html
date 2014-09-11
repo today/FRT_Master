@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="css/bootstrap.css">
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="lib/angular-route.js"></script>
-  <script type="text/javascript" src="lib/jquery-1.11.0.js"></script>
+  
+  <script type="text/javascript" src="js/frt_master.js"></script>
 </head>
 <body ng-app="inputApp">
   <form name="myForm" ng-controller="Ctrl">
@@ -25,10 +26,9 @@
       <h2><a href="clear.html">查询分析</a></h2>
     </div>
 
-    <div class='to_top' >
-      <h4 id="msg_area">......</h4>
+    <div class='msg' >
+      <h2 id="msg_area">{{message}}</h2>
      
-    
     </div>
   </form>
 
@@ -36,15 +36,40 @@
   var inputApp = angular.module('inputApp', []);
 
   function Ctrl($scope) {
-    $scope.value = 12;
+    $scope.message = "......";
 
     $scope.clear = function(){
       alert();
     };
 
     $scope.export = function(){
-      alert("export");
-    };
+      console.log("export start");
+      // 检查特定目录和文件是否存在
+      var evnPath = getEnvPath("frt_booking");
+      if( evnPath ){
+        console.log("环境存在，可以继续执行。 " + evnPath);
+      }else{
+        alert("没有找到U盘上的预约系统，请检查U盘是否已经插入。");
+        return;
+      }
+
+      // 检查token是否合法
+
+      // 执行python程序，导出数据
+      $scope.message = "开始导出患者信息";
+      var strCmd = 'python dumpCustomer.py "' + evnPath + '"';
+      process.exec( strCmd,
+          function (error, stdout, stderr) {
+            if (error !== null) {
+              console.log('exec error: ' + error);
+              // 显示操作失败消息。
+            }
+            console.log('stdout: ' + stdout);
+            // 显示操作成功消息。
+            $scope.message = "导出患者信息 成功完成。";
+            $scope.$apply();
+          });
+      };
     
   }
   </script>

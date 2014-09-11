@@ -1,11 +1,12 @@
 var fs = require('fs');
 var mysql = require('mysql');
+var process = require('child_process');
 
 function getEnvPath(module_name){
 	var retVal = null;
 	var base_path = "/Volumes/";
 	var module_path = "";
-	var config_filename = "config.json";
+	var config_filename = "data/config.json";
 
 	if( module_name == "frt_booking"){
 		module_path = "/FRT_booking/";

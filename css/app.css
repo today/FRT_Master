@@ -25,6 +25,9 @@ hr {
 	margin-top:-75px;
 }
 
+.msg {
+	font-size: 24;
+}
 
 input[disabled]
 {
