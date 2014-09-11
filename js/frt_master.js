@@ -1,6 +1,39 @@
 var fs = require('fs');
 var mysql = require('mysql');
 
+function getEnvPath(module_name){
+	var retVal = null;
+	var base_path = "/Volumes/";
+	var module_path = "";
+	var config_filename = "config.json";
+
+	if( module_name == "frt_booking"){
+		module_path = "/FRT_booking/";
+	}else if( module_name == "frt_input"){
+		module_path = "/chufang_input/";
+	}else if( module_name == "frt_aid"){
+		module_path = "/FRT_aid/";
+	}else{
+		module_path = "";
+	}
+
+	// 获取所有的 U盘 的路径
+	var UDiskPaths = fs.readdirSync(base_path);
+
+	// 循环查找路径下有没有指定的文件
+	for(i=0; i<UDiskPaths.length; i++ ){
+		var fullPath = base_path + UDiskPaths[i] + module_path + config_filename;
+		
+		if( fs.existsSync(fullPath) ){
+			retVal = base_path + UDiskPaths[i] + module_path;
+		}
+		//console.log( retVal );
+	}
+	
+	return retVal;
+}
+
+
 function getYMD( aDate ){
 	var year = aDate.getFullYear();
 	var month = aDate.getMonth()+1;
