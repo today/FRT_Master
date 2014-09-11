@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>门诊处方系统 数据管理</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="lib/angular-route.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.11.0.js"></script>
+</head>
+<body ng-app="inputApp">
+  <form name="myForm" ng-controller="Ctrl">
+    <h1 style="">门诊处方系统</h1> 
+    <h2> 数据管理</h2>
+    <br><br>
+    <div id="menu_area" style="float:left;width:600px;">
+      <h2><a href="import.html">数据导入</a></h2>
+      <br><br>
+      <h2><a ng-click="export()">患者信息导出</a></h2>
+      <br><br>
+      <h2><a ng-click="clear()">数据清理</a></h2>
+      <br><br>
+      <h2><a href="clear.html">查询分析</a></h2>
+    </div>
+
+    <div class='to_top' >
+      <h4 id="msg_area">......</h4>
+     
+    
+    </div>
+  </form>
+
+<script type="text/javascript">
+  var inputApp = angular.module('inputApp', []);
+
+  function Ctrl($scope) {
+    $scope.value = 12;
+
+    $scope.clear = function(){
+      alert();
+    };
+
+    $scope.export = function(){
+      alert("export");
+    };
+    
+  }
+  </script>
+</body>
+</html>
+
+
+
+
