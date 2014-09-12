@@ -66,12 +66,16 @@ function isblank(strA){
 // 从文件中读入Json
 function getJson2obj( strFilename ){
 	var aJson = {};
-	if(fs.existsSync( strFilename) ){
-		var strBookingList = fs.readFileSync(strFilename);
-	    aJson = JSON.parse(strBookingList);
+	//console.log(strFilename);
+	if(fs.existsSync( strFilename ) ){
+		var strJson = fs.readFileSync(strFilename);
+		//console.log(strJson);
+	    aJson = JSON.parse(strJson);
 	}
 	return aJson;
 } 
+
+
 
 // 把对象以 Json 格式写入文件。
 function save2Json( filename, obj){

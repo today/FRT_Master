@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 新患者导入</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="node_modules/underscore/underscore.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="inputApp" ng-controller="Ctrl" >
+  <span id='debug_area' style='display:none;'> 开发人员专用区域，按  `  键(ESC键下面那个键)，就可隐藏。  
+    
+  </span>
+  <h1 style="">
+    福润堂 新患者导入 
+  </h1> 
+  <div style="float:left;width:600px;">
+  <br>
+  <h2>
+    新患者列表 
+  </h2> 
+    <table border="1" width="80%">
+      <tr><th>编号</th><th>姓名</th><th>性别</th><th>年龄</th><th>电话</th></tr>
+      
+      <tr ng-repeat="custom in new_customs ">
+        <td>{{custom.patient_no}}</td>
+        <td>{{custom.patient_name}}</td>
+        <td>{{custom.sex}}</td>
+        <td>{{custom.age}}</td>
+        <td>{{custom.mobile}}</td>
+      </tr>
+    </table>
+    <br>
+    <button ng-click="saveNewCustom( )">全部保存</button>
+    
+  </div>
+  <div class='msg' >
+      <h2 id="msg_area">{{message}}</h2>
+     
+    </div>
+  
+  <script type="text/javascript">
+  
+  var inputApp = angular.module('inputApp', []);
+
+  function Ctrl($scope) {
+    $scope.message = "......";
+
+    // 检查特定目录和文件是否存在
+    var evnPath = getEnvPath("frt_booking");
+    if( evnPath ){
+      console.log("环境存在，可以继续执行。 " + evnPath);
+    }else{
+      alert("没有找到U盘上的预约系统，请检查U盘是否已经插入。");
+      return;
+    }
+
+    // 读入所有 新增 Customer 信息
+    var fullpath = evnPath + "data/new_custom.json";
+    console.log( fullpath );
+    $scope.new_customs = getJson2obj( fullpath );
+    // console.log($scope.new_customs );
+
+    $scope.saveNewCustom = function(){
+      //console.log("import start");
+      
+      // 检查token是否合法
+
+      // 执行python程序，导出数据
+      $scope.message = "开始导出患者信息";
+      var strCmd = 'python importCustom.py "' + evnPath + '"';
+      console.log(strCmd);
+      process.exec( strCmd,
+          function (error, stdout, stderr) {
+            if (error !== null) {
+              console.log('exec error: ' + error);
+              // 显示操作失败消息。
+            }
+            console.log('stdout: ' + stdout);
+            // 显示操作成功消息。
+            $scope.message = "导出患者信息 成功完成。";
+            $scope.$apply();
+          });
+      };
+
+  }
+
+    </script>
+  </body>
+  </html>
+
+
+
+
