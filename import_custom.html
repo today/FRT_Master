@@ -41,12 +41,13 @@
   <script type="text/javascript">
   
   var inputApp = angular.module('inputApp', []);
+  var evnPath = "";
 
   function Ctrl($scope) {
     $scope.message = "......";
 
     // 检查特定目录和文件是否存在
-    var evnPath = getEnvPath("frt_booking");
+    evnPath = getEnvPath("frt_booking");
     if( evnPath ){
       console.log("环境存在，可以继续执行。 " + evnPath);
     }else{

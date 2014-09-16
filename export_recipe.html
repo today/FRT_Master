@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 历史处方导出</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script type="text/javascript" src="lib/angular.js"></script>
+ 
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="inputApp" ng-controller="Ctrl">
+  <h1 style="">福润堂<a href="index.html" style="float:right">导航页</a></h1> 
+  
+  <div style="float:left;width:69%;">
+    <h2 style="">门诊处方系统—数据管理—历史处方导出    </h2>
+    <br>
+    选择日期：<input type="date"   ng-model="selected_date" required style="width:150px" ng-change="loadBooking()" />
+    &nbsp;&nbsp;&nbsp;&nbsp;<button   ng-click="getHistory()"  > 导出历史病历 </button>
+    <table border="1" style="float:left;width:69%;" >
+      <tr>
+        <th></th>
+        <th>病历号</th>
+        <th>门诊号</th>
+        <th>姓名</th>
+        <th>联系电话</th>
+        <th style="width:150px;">备注</th>
+        
+      </tr>
+      <tr ng-repeat="obj in datas.bookinglist">
+        <td align="center">{{$index+1}}</td>
+        
+        <td>{{obj.patient_no}}</td>
+        <td>{{obj.case_no}}</td>
+        <td>{{obj.name}}</td>
+        <td>{{obj.mobile}}</td>
+        <td>{{obj.comment}}</td>
+        
+      </tr>
+    </table>
+    
+    </div>
+    <div class='msg' ><br><br> <h3>系统消息：</h3>
+      <textarea readonly style="font-size:36;height:400px;width:30%;" >{{message}}</textarea>
+    </div>
+  
+<script type="text/javascript">
+  var _ = require('underscore');
+  var inputApp = angular.module('inputApp', []);
+  envPath_booking = "";
+  envPath_aid = "";
+  function Ctrl($scope) {
+    var process = require('child_process');
+    var os = require('os');
+
+    $scope.message = "......";
+    var run_msg = "";
+    var run_flag = false;
+
+    // 检查特定目录和文件是否存在
+    envPath_booking = getEnvPath("frt_booking");
+    if( envPath_booking ){
+      run_flag = true;
+      run_msg = "\n《门诊预约系统》U盘存在，可以继续执行。 ";
+      console.log( run_msg + envPath_booking );
+    }else{
+      run_flag = false;
+      run_msg = "\n没有找到《门诊预约系统》所需U盘，请检查U盘是否已经连接。";
+      alert( run_msg );
+    }
+    $scope.message = run_msg;
+
+    // 检查特定目录和文件是否存在
+    envPath_aid = getEnvPath("frt_aid");
+    if( envPath_aid ){
+      run_flag = run_flag && true;
+      run_msg = "\n《辅助诊疗系统》U盘存在，可以继续执行。 ";
+      console.log( run_msg + envPath_aid );
+    }else{
+      run_flag = run_flag && false;
+      run_msg = "\n没有找到《辅助诊疗系统》所需U盘，请检查U盘是否已经连接。";
+      alert( run_msg );
+    }
+    $scope.message += run_msg;
+
+    //$scope.fields = {};
+    $scope.datas = {};
+    var url_param = "";
+
+    var objDate = new Date();;
+    if(location.href.indexOf("?") > 0 )  {  
+        url_param = location.href.substring(location.href.indexOf("?")+1);
+        var params = url_param.split("_");
+        var param_date = params[0];
+        
+        var YMD_array = param_date.split("-");
+        objDate.setFullYear(YMD_array[0],YMD_array[1]-1,YMD_array[2]);         
+    }
+    $scope.selected_date = objDate;
+
+    $scope.loadBooking = function() {
+      console.log($scope.selected_date);
+      $scope.datas = getBooking($scope.selected_date);
+    };
+
+    $scope.loadBooking();
+
+
+    $scope.getHistory = function() {
+      $scope.message += "\n开始执行导出操作，请等待。";
+      
+      patient_list = [];
+      var temp_list = $scope.datas.bookinglist;
+
+      // 排除空白记录
+      //console.log(temp_list);
+      if(temp_list){
+        var num = temp_list.length;
+        for( i=0; i< num; i++) {
+          var p_no = temp_list[i].patient_no;
+          if( !("0" == p_no || 0==p_no) ){
+            patient_list.push(p_no);
+          }
+        }
+
+        var strCmd = 'python fromdb.py "' + patient_list.join(",") + '"';
+        process.exec( strCmd,
+          function (error, stdout, stderr) {
+            if (error !== null) {
+              console.log('exec error: ' + error);
+              $scope.message += "\n导出操作出错，请联系技术人员。";
+              // 显示操作失败消息。
+            }
+            console.log('stdout: ' + stdout);
+            alert("导出操作成功完成。");
+            // 显示操作成功消息。
+        });
+
+      }else{
+        $scope.message += "\n列表为空，无法执行导出操作。";
+      }
+    };
+
+  }
+  
+  function getBookingFilename( aDate ){
+    return envPath_booking + '/data/booking_' + getYMD(aDate) + '.json' ;
+  }
+
+  // 读入指定日期的预约登记表
+  function getBooking( aDate ){
+    var aJson = [];
+    var strFilename = getBookingFilename(aDate) ;
+
+
+    if(fs.existsSync( strFilename) ){
+      var strBookingList = fs.readFileSync(strFilename);
+      console.log("getBooking(): " + strBookingList);
+        aJson = JSON.parse(strBookingList);
+    }
+    
+    return aJson;
+  } 
+
+  </script>
+</body>
+</html>
+
+
+
+
