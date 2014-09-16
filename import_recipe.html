@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="dbApp" ng-controller="Ctrl">
+  <h1>福润堂 <a href="index.html" style="float:right">返回首页</a>
+     </h1> 
+  <h2>门诊处方系统—数据管理—处方数据导入</h2> 
+  <br/>
+      
+  <div style="float:left;width:70%;height=100%;">
+    <h3>病历文件列表：<br/></h3>
+    <br>
+    <li ng-repeat="name in new_filenames " >
+        <span ng-click="showJson(name)"> {{name}} </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button ng-show="!noDB" ng-click="save2db(name)">保存到数据库</button>  <br><br>
+    </li>
+    <br><br><br><br><br><br><br><br>
+  </div>
+    <div class='msg' > <h2 id="msg_area">{{message}}</h2> </div>
+    
+<script type="text/javascript">
+var path = require('path');
+
+
+var dbApp = angular.module('dbApp', []);
+
+function Ctrl($scope) {
+  $scope.message = "......";
+  var run_msg = "";
+  var run_flag = false;
+
+  // 检查特定目录和文件是否存在
+  var evnPath = getEnvPath("frt_input");
+  if( evnPath ){
+    run_flag = true;
+    run_msg = "环境存在，可以继续执行。 ";
+    console.log( run_msg + evnPath );
+  }else{
+    run_flag = false;
+    run_msg = "没有找到U盘上的病历录入系统，请检查U盘是否已经插入。";
+    alert( run_msg );
+  }
+  $scope.message = run_msg;
+
+  $scope.noDB = false;//true;
+
+  if( run_flag ){
+    // 读入目录下全部 JSon 文件 。
+    var basePath = "";
+    var files = fs.readdirSync( evnPath + "data/case");
+    var jsonFiles = [];
+    // 筛选出 JSon 文件
+    files.forEach(function(fileName, index) {
+      if( ".json" === path.extname(fileName) && !(fileName.indexOf(".") === 0) ){
+        jsonFiles.push(fileName);
+      }
+      //console.log( path.extname(fileName) );
+    });
+    $scope.new_filenames = jsonFiles;
+  }
+  
+  
+  $scope.save2db = function(filename) {
+    console.log(filename);
+    var fullpath = evnPath + "data/case/" + filename;
+    cmd_str = 'python 2db.py "' + fullpath + '"';
+    console.log(cmd_str);
+    process.exec(cmd_str ,
+      function (error, stdout, stderr) {
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+        console.log('stdout: ' + stdout);
+        location.reload(true);
+    });
+  };
+
+  $scope.showJson = function(filename) {
+    console.log( "filename : " + filename );
+  };
+
+  $scope.testA = function() {
+    console.log( JSON.stringify($scope) );
+  };
+}
+
+</script>
+</body>
+</html>
+
+
+
+

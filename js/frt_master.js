@@ -28,7 +28,7 @@ function getEnvPath(module_name){
 		if( fs.existsSync(fullPath) ){
 			retVal = base_path + UDiskPaths[i] + module_path;
 		}
-		//console.log( retVal );
+		//console.log( fullPath );
 	}
 	
 	return retVal;

@@ -5,7 +5,7 @@ import json
 import MySQLdb
 import os
 import sys
-#import shutil
+import shutil
 
 def saveRecipe( recipeObj ):
   patientObj = recipeObj['patients']
@@ -90,7 +90,7 @@ def setDefValue( aDict, akey_list ):
       
 
 all_the_text = ""
-jsonfilename = 'data/case/' + sys.argv[1]
+jsonfilename = sys.argv[1]
 
 
 if os.path.exists( jsonfilename) :
@@ -106,7 +106,7 @@ if os.path.exists( jsonfilename) :
       saveRecipe( recipeObject )
 
       # 处理完的文件，移动到另外的文件夹
-      os.rename( jsonfilename, 'data/case_saved/' + sys.argv[1])
+      shutil.move( jsonfilename, '../backup/input/case_saved/' )
   except Exception as inst:
       print type(inst)     # the exception instance
       print inst.args      # arguments stored in .args
