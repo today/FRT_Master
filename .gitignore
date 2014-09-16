@@ -2,6 +2,7 @@
 node-webkit.app
 data
 lib
+old_photos
 
 
 # Logs
@@ -35,3 +36,4 @@ node_modules
 
 
 *.pyc
+
