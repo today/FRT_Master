@@ -67,7 +67,7 @@
       // 检查token是否合法
 
       // 执行python程序，导出数据
-      $scope.message = "开始导出患者信息";
+      $scope.message += "开始导入患者信息";
       var strCmd = 'python importCustom.py "' + evnPath + '"';
       console.log(strCmd);
       process.exec( strCmd,
