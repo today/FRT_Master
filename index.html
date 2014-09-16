@@ -13,17 +13,18 @@
 </head>
 <body ng-app="inputApp">
   <form name="myForm" ng-controller="Ctrl">
-    <h1 style="">门诊处方系统</h1> 
-    <h2> 数据管理</h2>
-    <br><br>
+    <h1 style="">门诊处方系统——数据管理</h1> 
+    <br>
     <div id="menu_area" style="float:left;width:600px;">
-      <h2><a href="import.html">数据导入</a></h2>
+      <h2><a href="import_custom.html">患者数据导入</a></h2>
       <br><br>
-      <h2><a ng-click="export()">患者信息导出</a></h2>
+      <h2><a href="import_recipe.html">患者数据导入</a></h2>
       <br><br>
-      <h2><a ng-click="clear()">数据清理</a></h2>
+      <h2><a href="#" ng-click="export()">患者信息导出</a></h2>
       <br><br>
-      <h2><a href="clear.html">查询分析</a></h2>
+      <h2><a href="#" ng-click="clear()">数据清理</a></h2>
+      <br><br>
+      <h2><a href="#" href="clear.html">查询分析</a></h2>
     </div>
 
     <div class='msg' >
