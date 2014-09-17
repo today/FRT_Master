@@ -41,7 +41,7 @@ function getYMD( aDate ){
 	var day = aDate.getDate();
 
 	var strDate = "" + year + "-" + month + "-" + day;
-	console.log(strDate);
+	//console.log(strDate);
 
 	return strDate;
 
