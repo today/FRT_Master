@@ -56,7 +56,7 @@ def saveCustom( customs ):
   except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
-  return ""
+  return "success"
 
 #print len(sys.argv)
 if len(sys.argv) != 2 :
@@ -71,8 +71,13 @@ json_file.close()
 """ 转为对象 """
 customsArray = json.loads( strJson );
 print customsArray
-all_json =  saveCustom( customsArray )
+run_flag =  saveCustom( customsArray )
 
+"""  操作成功，写空数组到文件中  """
+if run_flag == "success" :
+  json_file = codecs.open( sys.argv[1] + 'data/new_custom.json','w','utf-8')
+  strJson = json_file.write("[]")
+  json_file.close()
 
 
 
