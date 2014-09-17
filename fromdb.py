@@ -53,9 +53,18 @@ def getRecipe( p_no  ):
   return bigJson
 
 def cp_img():
-  for file in os.listdir('old_photos/'): 
-    if not os.path.exists('../FRT_aid/img/' + file ):
-      shutil.copyfile( 'old_photos/' + file , '../FRT_aid/img/' + file) 
+  for filename in os.listdir('old_photos/'): 
+    if not os.path.exists('../FRT_aid/img/' + filename ):
+      shutil.copyfile( 'old_photos/' + filename , '../FRT_aid/img/' + filename) 
+
+def cp_img2( imgs, dir_path ):
+  for filename in imgs: 
+    #print 'copy ' + dir_path + 'img/' + filename
+    src_file = 'old_photos/' + filename
+    dest_file = dir_path + 'img/' + filename
+    if os.path.exists( src_file ):
+      #print src_file
+      shutil.copyfile( src_file , dest_file) 
 
 
 
@@ -75,10 +84,25 @@ for p_no in no_list:
 
 """  将字符串写入文件  """
 json_file = codecs.open( sys.argv[2] + 'data/for_doctor.json','w','utf-8')
-json_file.write(all_json[0:-1] + ']')
+json_str = all_json[0:-1] + ']'
+json_file.write(json_str)
 json_file.close()
 
-cp_img()
+
+""" 将U盘里的图片删除 """
+for filename in os.listdir( sys.argv[2] + 'img/' ): 
+  if os.path.exists( sys.argv[2] + 'img/' + filename ):
+    os.remove( sys.argv[2] + 'img/' + filename )
+
+""" 将历史病历所涉及的图片筛选出来，并拷贝到U盘里 """
+json_obj = json.loads(json_str)
+for temp_obj in json_obj:
+  cases_obj = temp_obj['cases']
+  for temp_obj2 in cases_obj:
+    images_obj = temp_obj2['images']
+    cp_img2(images_obj, sys.argv[2] )
+
+
 
 
      
