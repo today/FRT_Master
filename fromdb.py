@@ -59,8 +59,8 @@ def cp_img():
 
 
 
-if len(sys.argv) < 2 :
-  print 'usage: python getHistory.py patients_no   \n  patients_no is a list of patients number.'
+if len(sys.argv) < 3 :
+  print 'usage: python getHistory.py patients_no desc_dir  \n  patients_no is a list of patients number.'
   exit()
 
 # 从命令行参数中取 病历号
@@ -74,7 +74,7 @@ for p_no in no_list:
 
 
 """  将字符串写入文件  """
-json_file = codecs.open('../FRT_aid/data/for_doctor.json','w','utf-8')
+json_file = codecs.open( sys.argv[2] + 'data/for_doctor.json','w','utf-8')
 json_file.write(all_json[0:-1] + ']')
 json_file.close()
 
