@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var mysql = require('mysql');
 var process = require('child_process');
 
@@ -98,3 +99,7 @@ function getConn(){
 	});
 	return conn;
 }
+
+var add_msg = function( obj, msg ){
+    obj.message += "\n" + msg;
+  }
