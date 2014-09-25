@@ -26,11 +26,16 @@ def saveCustom( customs ):
       cur = conn.cursor()
 
       for custom in customs :
+        if not custom.has_key("patient_name") :
+          print "import: " + unicode(custom["patient_no"]) + " Patient name lost, ingore."
+          continue
 
         checkOptionValue(custom, optVals )
+        print "import: " + unicode(custom["patient_no"]) + " " #+ unicode(custom["patient_name"])
+
         p_no = str( custom['patient_no'] )
         strSql1 = "SELECT * FROM t_customer WHERE patient_no='" + p_no + "' "
-        print strSql1
+        #print strSql1
         cur.execute(strSql1)
         if cur.fetchone() :
           # 存在，则执行update
@@ -38,7 +43,7 @@ def saveCustom( customs ):
           strSql2 = "UPDATE t_customer SET  "  \
             + "`patient_name`=%s, `mobile`=%s, `sex`=%s, `age`=%s, `remark`=%s "  \
             + "  WHERE patient_no=%s" 
-          print strSql2
+          #print strSql2
           cur.execute( strSql2, values )
           conn.commit()
         else :
@@ -46,7 +51,7 @@ def saveCustom( customs ):
           values = getVals(custom, ['patient_no', 'patient_name', 'mobile','sex','age','remark'])
           strSql3 = "INSERT INTO t_customer ( `patient_no`, `patient_name`, `mobile`, `sex`, `age`, `remark`) " \
             + " VALUES (%s,%s,%s,%s,%s,%s) "
-          print strSql3
+          #print strSql3
           cur.execute( strSql3, values )
           conn.commit()
       
@@ -70,7 +75,7 @@ json_file.close()
 
 """ 转为对象 """
 customsArray = json.loads( strJson );
-print customsArray
+#print customsArray
 run_flag =  saveCustom( customsArray )
 
 """  操作成功，写空数组到文件中  """
