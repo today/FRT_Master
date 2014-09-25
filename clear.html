@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 中间文件清理</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="node_modules/underscore/underscore.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="inputApp" ng-controller="Ctrl" >
+  
+  <h1>福润堂 <a href="index.html" style="float:right">返回首页</a></h1>
+
+  <h2>门诊处方系统—数据管理—中间文件清理</h2> 
+  <br>
+  <div style="float:left;width:700px;">
+    <h2>
+      【门诊预约系统】中间文件列表： 
+      <button ng-click="go_clear_booking()"> 清理中间文件 </button>
+    </h2> 
+    <li ng-repeat="name in booking_files " >
+        <span> {{name}} </span> 
+    </li>
+    <br>
+  </div>
+  
+
+  <div style="float:left;width:700px;">
+    <br>
+    <h2>
+      【处方录入系统】中间文件列表：
+      <button ng-click="go_clear_input()"> 清理中间文件 </button>
+    </h2> 
+    <li ng-repeat="name in input_files " >
+        <span> {{name}} </span> 
+    </li>
+  </div>
+
+
+
+  <div class='msg' ><br><br> <h3>系统消息：</h3>
+      <textarea readonly style="font-size:36;height:400px;width:30%;" >{{message}}</textarea>
+    </div>
+  
+  <script type="text/javascript">
+  
+  var inputApp = angular.module('inputApp', []);
+  var evnPath = "";
+
+  function Ctrl($scope) {
+    $scope.message = "";
+    var msg = "";
+
+    // 检查特定目录和文件是否存在
+    evnPath = getEnvPath("frt_booking");
+    if( evnPath ){
+      msg = "发现【门诊预约系统】。 ";
+      console.log( msg + evnPath);
+    }else{
+      msg = "没有找到U盘上的【门诊预约系统】，请检查U盘。";
+      console.log(msg);
+    }
+    add_msg( $scope, msg );
+
+    evnPath2 = getEnvPath("frt_input");
+    if( evnPath2 ){
+      msg = "发现【处方录入系统】。 ";
+      console.log( msg + evnPath);
+    }else{
+      msg = "没有找到U盘上的【处方录入系统】，请检查U盘。";
+      console.log(msg);
+    }
+    add_msg( $scope, msg );
+
+
+    // 读入所有 中间文件 的文件名
+    
+    if( evnPath ){
+      var fullpath = evnPath + "data/";
+      // 读入目录下全部 JSon 文件 。
+      var files = fs.readdirSync( fullpath );
+      var jsonFiles = [];
+      // 筛选出 JSon 文件
+      files.forEach(function(fileName, index) {
+        if( ".json" === path.extname(fileName) && (fileName.indexOf("booking") === 0) ){
+          jsonFiles.push(fileName);
+        }
+        //console.log( path.extname(fileName) );
+      });
+      $scope.booking_files = jsonFiles;
+    }
+
+    if( evnPath2 ){
+      var fullpath = evnPath2 + "data/case_saved/";
+      // 读入目录下全部 JSon 文件 。
+      var files = fs.readdirSync( fullpath );
+      var jsonFiles = [];
+      // 筛选出 JSon 文件
+      files.forEach(function(fileName, index) {
+        if( ".json" === path.extname(fileName) && (fileName.indexOf("c") === 0) ){
+          jsonFiles.push(fileName);
+        }
+        //console.log( path.extname(fileName) );
+      });
+      $scope.input_files = jsonFiles;
+    }
+    
+  }
+
+  
+
+    </script>
+  </body>
+  </html>
+
+
+
+
