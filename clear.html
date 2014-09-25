@@ -19,27 +19,12 @@
   <div style="float:left;width:700px;">
     <h2>
       【门诊预约系统】中间文件列表： 
-      <button ng-click="go_clear_booking()"> 清理中间文件 </button>
     </h2> 
-    <li ng-repeat="name in booking_files " >
-        <span> {{name}} </span> 
+    <li ng-repeat="name in booking_files " > {{name}} &nbsp;&nbsp;<button ng-click="go_clear_booking(name)"> 清理 </button>
+      <br>&nbsp;
     </li>
     <br>
   </div>
-  
-
-  <div style="float:left;width:700px;">
-    <br>
-    <h2>
-      【处方录入系统】中间文件列表：
-      <button ng-click="go_clear_input()"> 清理中间文件 </button>
-    </h2> 
-    <li ng-repeat="name in input_files " >
-        <span> {{name}} </span> 
-    </li>
-  </div>
-
-
 
   <div class='msg' ><br><br> <h3>系统消息：</h3>
       <textarea readonly style="font-size:36;height:400px;width:30%;" >{{message}}</textarea>
@@ -65,16 +50,6 @@
     }
     add_msg( $scope, msg );
 
-    evnPath2 = getEnvPath("frt_input");
-    if( evnPath2 ){
-      msg = "发现【处方录入系统】。 ";
-      console.log( msg + evnPath);
-    }else{
-      msg = "没有找到U盘上的【处方录入系统】，请检查U盘。";
-      console.log(msg);
-    }
-    add_msg( $scope, msg );
-
 
     // 读入所有 中间文件 的文件名
     
@@ -93,20 +68,24 @@
       $scope.booking_files = jsonFiles;
     }
 
-    if( evnPath2 ){
-      var fullpath = evnPath2 + "data/case_saved/";
-      // 读入目录下全部 JSon 文件 。
-      var files = fs.readdirSync( fullpath );
-      var jsonFiles = [];
-      // 筛选出 JSon 文件
-      files.forEach(function(fileName, index) {
-        if( ".json" === path.extname(fileName) && (fileName.indexOf("c") === 0) ){
-          jsonFiles.push(fileName);
-        }
-        //console.log( path.extname(fileName) );
+   
+
+    $scope.go_clear_booking = function(filename){
+      // 移动预约文件
+      cmd_str = 'mv ' + evnPath + "data/" + filename + ' ../backup/booking/';
+      console.log(cmd_str);
+      process.exec(cmd_str ,
+        function (error, stdout, stderr) {
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+          console.log('stdout: ' + stdout);
+          location.reload(true);
       });
-      $scope.input_files = jsonFiles;
+
     }
+
+
     
   }
 
