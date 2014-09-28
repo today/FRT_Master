@@ -81,7 +81,7 @@ function Ctrl($scope) {
     });
 
     // 移动处方图片
-    cmd_str = 'mv ' + evnPath + 'new_photos/*.jpg ./old_photos/';
+    cmd_str = 'mv ' + evnPath + 'old_photos/*.jpg ./old_photos/';
     console.log(cmd_str);
     process.exec(cmd_str ,
       function (error, stdout, stderr) {
