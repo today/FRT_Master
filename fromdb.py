@@ -17,7 +17,7 @@ def getRecipe( p_no  ):
       cur=conn.cursor()
       
       """ 取出病历信息的 Json_id  """
-      sql2 = "select json_id from t_recipe where  patient_no='"+ p_no + "' order by id desc"
+      sql2 = "select json_id from t_recipe where  patient_no='"+ p_no + "' order by id desc LIMIT 20"
       #print sql2
       cur.execute(sql2)
       allResult=cur.fetchall()
