@@ -15,6 +15,8 @@ function getEnvPath(module_name){
 		module_path = "/chufang_input/";
 	}else if( module_name == "frt_aid"){
 		module_path = "/FRT_aid/";
+	}else if( module_name == "frt_cashier"){
+		module_path = "/FRT_Cashier/";
 	}else{
 		module_path = "";
 	}
@@ -28,10 +30,9 @@ function getEnvPath(module_name){
 		
 		if( fs.existsSync(fullPath) ){
 			retVal = base_path + UDiskPaths[i] + module_path;
+			console.log( fullPath );
 		}
-		//console.log( fullPath );
 	}
-	
 	return retVal;
 }
 
