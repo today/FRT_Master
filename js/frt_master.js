@@ -106,10 +106,28 @@ var add_msg = function( obj, msg ){
   };
 
 var show_msg = function(msg, delay){
-  var obj = document.getElementById("auto_hide_msg");
+  var obj = document.getElementById("AUTO_HIDE_MSG");
+  if(obj === null ){
+  	obj = document.createElement('span');
+  	obj.id = "AUTO_HIDE_MSG";
+  	document.body.appendChild(obj);
+  }
+  if( msg === undefined ){
+  	obj.innerHTML="执 行 成 功";
+  }else{
+  	obj.innerHTML=msg;
+  }
+
+  var delay_time = 1200;
+  if( delay === undefined ){
+  	delay_time = 1200;
+  }else{
+  	delay_time = delay;
+  }
+  
   obj.style.display = "block";
   setTimeout(function(){
                          obj.style.display = "none";
-                        },1200);
+                        }, delay_time);
 };
 
