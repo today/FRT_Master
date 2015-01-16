@@ -103,4 +103,13 @@ function getConn(){
 
 var add_msg = function( obj, msg ){
     obj.message += "\n" + msg;
-  }
+  };
+
+var show_msg = function(msg, delay){
+  var obj = document.getElementById("auto_hide_msg");
+  obj.style.display = "block";
+  setTimeout(function(){
+                         obj.style.display = "none";
+                        },1200);
+};
+

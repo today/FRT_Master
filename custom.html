@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 预约</title>
+  
+  <link rel="stylesheet" href="css/app.css">
+  <style type="text/css">
+    input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
+      background-color: yellow;
+    }
+  </style>
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="node_modules/underscore/underscore.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="ngApp" ng-controller="Ctrl" >
+  
+  <h1 style="">
+    福润堂 患者管理    
+  </h1> 
+  <div class='to_top'   >
+    <h3 style="display:none;">请一定要先执行 
+      <a href="import_custom.html">新患者数据导入</a>  操作，否则会造成病历号重复。
+    </h3>
+    
+    <h3>
+    病历号:     <input  type="text" id="id_1"  ng-model="fields.patient_no"  required  /> 
+    <input type="button" value="查找患者"   ng-click="load_patient()"  /> 
+    <br/>
+    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.name"  required/>
+    <br/>
+    性别: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_3"  ng-model="fields.sex"   required/> 
+    <br/>
+    年龄: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_4"  ng-model="fields.age"   required/>
+    <br/>
+    电话: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel" id="id_5" ng-model="fields.mobile" ng-pattern="/[0-9]/" required />
+    <br/>
+    备注: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel" id="id_6" ng-model="fields.remark"   />
+    <br/><br/>
+       
+    <input type="button" value=" 保存 "  ng-click="save_patient()"  /> 
+    </h3>
+    
+
+  </div>
+
+  <h1 id="auto_hide_msg"  style="text-align:center;padding-top: 50px;display:none;" > 保 存 成 功 </h1>
+  
+  <script type="text/javascript">
+  
+  var inputApp = angular.module('ngApp', []);
+
+  function Ctrl($scope, $http) {
+    
+    $scope.init = function(){
+      $scope.fields = {};
+      $scope.datas = {};
+      
+      $scope.flag_msg_show = false;
+
+      $scope.fields.patient_id = "";
+      $scope.fields.patient_no = "";
+      $scope.fields.name = "";
+      $scope.fields.mobile = "";
+      $scope.fields.age = "";
+      $scope.fields.sex = "";
+      $scope.fields.remark = "";
+    };
+
+    $scope.init();
+    
+    $scope.load_patient = function(){
+      var  allCustom = {};
+      
+    };
+    
+    $scope.save_patient = function() {
+
+      // 检查必选项，如果为空，不予保存
+      if(isblank($scope.fields.name) || isblank($scope.fields.patient_no)){
+        alert("病历号和姓名不能为空。");
+        return false;
+      }
+    
+      $scope.flag_msg_show = true;
+      show_msg();
+      //$scope.$apply();
+      
+      $scope.init();
+     
+    };
+
+    
+
+      
+  }
+
+  debug_flag = 0;
+
+  </script>
+  </body>
+  </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
