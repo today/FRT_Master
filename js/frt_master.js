@@ -105,6 +105,11 @@ var add_msg = function( obj, msg ){
     obj.message += "\n" + msg;
   };
 
+
+var show_err_msg = function( msg ){
+    alert(msg);
+};
+
 var show_msg = function(msg, delay){
   var obj = document.getElementById("AUTO_HIDE_MSG");
   if(obj === null ){

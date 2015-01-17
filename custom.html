@@ -69,6 +69,27 @@
     
     $scope.load_patient = function(){
       var  allCustom = {};
+
+      var conn = getConn();
+      conn.connect();
+      conn.query("SELECT * from t_customer where patient_no='" + $scope.fields.patient_no + "'", 
+        function(err, rows, fields) {
+        if (err) {
+          console.log( err );
+        }else{
+          //console.log( rows );
+          var obj = rows[0];
+          $scope.fields.patient_id = obj.id;
+          //$scope.fields.patient_no = "";
+          $scope.fields.name = obj.patient_name;
+          $scope.fields.mobile = obj.mobile;
+          $scope.fields.age = obj.age;
+          $scope.fields.sex = obj.sex;
+          $scope.fields.remark = obj.remark;
+          $scope.$apply();
+        }
+      });
+      conn.end();
       
     };
     
@@ -81,13 +102,26 @@
       }
 
       // 保存患者数据
-
-    
-      $scope.flag_msg_show = true;
-      show_msg("保 存 成 功");
-      //$scope.$apply();
-      
-      $scope.init();    
+      var strSql2 = "UPDATE t_customer SET  "  +
+             "patient_name='"+ $scope.fields.name +
+             "', mobile='"+ $scope.fields.mobile +
+             "', sex='"+ $scope.fields.sex +
+             "', age='"+ $scope.fields.age +
+             "', remark='"+ $scope.fields.remark +"' " +
+             "  WHERE id='"+ $scope.fields.patient_id +"'" ;
+      var conn = getConn();
+      conn.connect();
+      conn.query( strSql2, 
+        function(err, rows, fields) {
+        if (err) {
+          console.log( err );
+          show_err_msg("程序出错");
+        }else{
+          show_msg("保 存 成 功");
+          $scope.init();
+        }
+      });
+      conn.end();
     };
 
     
