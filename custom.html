@@ -65,11 +65,17 @@
       $scope.fields.remark = "";
     };
 
+    $scope.clear = function(){
+      var temp_no = $scope.fields.patient_no;
+      $scope.init();
+      $scope.fields.patient_no = temp_no;
+    };
+
     $scope.init();
     
     $scope.load_patient = function(){
-      var  allCustom = {};
-
+      $scope.clear();
+      
       var conn = getConn();
       conn.connect();
       conn.query("SELECT * from t_customer where patient_no='" + $scope.fields.patient_no + "'", 
@@ -78,15 +84,21 @@
           console.log( err );
         }else{
           //console.log( rows );
-          var obj = rows[0];
-          $scope.fields.patient_id = obj.id;
-          //$scope.fields.patient_no = "";
-          $scope.fields.name = obj.patient_name;
-          $scope.fields.mobile = obj.mobile;
-          $scope.fields.age = obj.age;
-          $scope.fields.sex = obj.sex;
-          $scope.fields.remark = obj.remark;
-          $scope.$apply();
+          if( rows.length === 1 ){
+            var obj = rows[0];
+            $scope.fields.patient_id = obj.id;
+            //$scope.fields.patient_no = "";
+            $scope.fields.name = obj.patient_name;
+            $scope.fields.mobile = obj.mobile;
+            $scope.fields.age = obj.age;
+            $scope.fields.sex = obj.sex;
+            $scope.fields.remark = obj.remark;
+            $scope.$apply();
+          }else{
+            console.log( rows );
+            $scope.clear();
+            show_err_msg("这个病历号在数据库中不存在。");
+          }
         }
       });
       conn.end();
