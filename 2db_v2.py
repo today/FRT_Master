@@ -87,6 +87,8 @@ def setDefValue( aDict, akey_list ):
   for akey in akey_list :
     if not aDict.has_key( akey ):
       aDict[akey] = ''
+    elif aDict[akey] == None :
+      aDict[akey] = ""
       
 
 all_the_text = ""
