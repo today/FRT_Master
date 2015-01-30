@@ -72,7 +72,7 @@ ALTER TABLE `t_recipe` ADD COLUMN `age` VARCHAR(16)  NULL AFTER `mobile`;
 ALTER TABLE `t_recipe` ADD COLUMN `sex` VARCHAR(16)  NULL AFTER `age`;
 ALTER TABLE `t_recipe` ADD COLUMN `patient_comment` VARCHAR(256)  NULL AFTER `sex`;
 ALTER TABLE `t_recipe` ADD COLUMN `doctor_name` VARCHAR(32)  NULL AFTER `suitnum`;
-
+ALTER TABLE t_recipe ADD UNIQUE INDEX idx_recipe_no (recipe_no);
 
 
 CREATE TABLE `t_recipe_item` (

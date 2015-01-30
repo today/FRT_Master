@@ -8,16 +8,17 @@ import sys
 
 import mydb
 
-def getRecipe( p_no  ):
+def getRecipe( p_no, doctor_name ):
   bigJson = ""
   try:
       p_json = mydb.getPatientJson( p_no )
 
       conn = mydb.getConn()
-      cur=conn.cursor()
+      cur = conn.cursor()
       
       """ 取出病历信息的 Json_id  """
-      sql2 = "select json_id from t_recipe where  patient_no='"+ p_no + "' order by id desc LIMIT 20"
+      sql2 = "select json_id from t_recipe where  patient_no='"+ p_no + \
+        "' and doctor_name='"+ doctor_name +"'  order by id desc LIMIT 20"
       #print sql2
       cur.execute(sql2)
       allResult=cur.fetchall()
@@ -68,17 +69,18 @@ def cp_img2( imgs, dir_path ):
 
 
 
-if len(sys.argv) < 3 :
-  print 'usage: python getHistory.py patients_no desc_dir  \n  patients_no is a list of patients number.'
+if len(sys.argv) < 4 :
+  print 'usage: python fromdb.py patients_no desc_dir doctor_name \n  patients_no is a list of patients number.'
   exit()
 
 # 从命令行参数中取 病历号
 patient_no = sys.argv[1]
+doctor_name = sys.argv[3]
 
 all_json = "[ "
 no_list = patient_no.split(',')
 for p_no in no_list:
-  p_json_str = getRecipe( p_no )
+  p_json_str = getRecipe( p_no, doctor_name )
   all_json += p_json_str + ','
 
 

@@ -17,6 +17,9 @@
     <h2 style="">门诊处方系统—数据管理—历史处方导出    </h2>
     <br>
     选择日期：<input type="date"   ng-model="selected_date" required style="width:150px" ng-change="loadBooking()" />
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    选择医师：<input type="radio" name="doctor_name" ng-model="doctor_name" value="张耀">  张耀
+    <input type="radio" name="doctor_name" ng-model="doctor_name" value="马永泽">  马永泽
     &nbsp;&nbsp;&nbsp;&nbsp;<button   ng-click="getHistory()"  > 导出历史病历 </button>
     <table border="1" style="float:left;width:90%;" >
       <tr>
@@ -88,7 +91,7 @@
     $scope.datas = {};
     var url_param = "";
 
-    var objDate = new Date();;
+    var objDate = new Date();
     if(location.href.indexOf("?") > 0 )  {  
         url_param = location.href.substring(location.href.indexOf("?")+1);
         var params = url_param.split("_");
@@ -119,12 +122,13 @@
         var num = temp_list.length;
         for( i=0; i< num; i++) {
           var p_no = temp_list[i].patient_no;
-          if( !("0" == p_no || 0==p_no) ){
+          if( !("0" == p_no ||  0===p_no) ){
             patient_list.push(p_no);
           }
         }
 
-        var strCmd = 'python fromdb.py "' + patient_list.join(",") + '"  "' + envPath_aid + '"';
+        var strCmd = 'python fromdb.py "' + patient_list.join(",") + '"  "' +
+            envPath_aid + '" ' + $scope.doctor_name;
         console.log(strCmd);
         process.exec( strCmd,
           function (error, stdout, stderr) {
