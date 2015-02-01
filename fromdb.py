@@ -101,8 +101,11 @@ json_obj = json.loads(json_str)
 for temp_obj in json_obj:
   cases_obj = temp_obj['cases']
   for temp_obj2 in cases_obj:
-    images_obj = temp_obj2['images']
-    cp_img2(images_obj, sys.argv[2] )
+    if 'images' in temp_obj2.keys() :
+      images_obj = temp_obj2['images']
+      cp_img2(images_obj, sys.argv[2] )
+    else:
+      print "KEY 'images' not exists."
 
 
 
