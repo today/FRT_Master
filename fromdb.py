@@ -60,12 +60,14 @@ def cp_img():
 
 def cp_img2( imgs, dir_path ):
   for filename in imgs: 
-    #print 'copy ' + dir_path + 'img/' + filename
+    #print 'copy ' + unicode(imgs) 
     src_file = 'old_photos/' + filename
     dest_file = dir_path + 'img/' + filename
     if os.path.exists( src_file ):
       #print src_file
       shutil.copyfile( src_file , dest_file) 
+    else:
+      print "Image file No exists."
 
 
 
