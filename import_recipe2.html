@@ -79,20 +79,20 @@ function Ctrl($scope) {
           console.log('exec error: ' + error);
         }
         console.log('stdout: ' + stdout);
-        location.reload(true);
+        //location.reload(true);
     });
 
-    // 移动处方图片
-    // cmd_str = 'mv ' + evnPath + 'old_photos/*.jpg ./old_photos/';
-    // console.log(cmd_str);
-    // process.exec(cmd_str ,
-    //   function (error, stdout, stderr) {
-    //     if (error !== null) {
-    //       console.log('exec error: ' + error);
-    //     }
-    //     console.log('stdout: ' + stdout);
-    //     location.reload(true);
-    // });
+    //移动处方图片
+    cmd_str = 'mv ' + evnPath + 'new_photos/*.jpg ./old_photos/';
+    console.log(cmd_str);
+    process.exec(cmd_str ,
+      function (error, stdout, stderr) {
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+        console.log('stdout: ' + stdout);
+        location.reload(true);
+    });
   };
 
   $scope.showJson = function(filename) {
