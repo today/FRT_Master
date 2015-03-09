@@ -26,9 +26,10 @@
     
     <h3>
     病历号:     <input  type="text" id="id_1"  ng-model="fields.patient_no"  required  /> 
-    <input type="button" value="查找患者"   ng-click="load_patient()"  /> 
+    <input type="button" value="查找患者"   ng-click="load_patient_by_no()"  /> 
     <br/>
-    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.name"  required/>
+    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.name" required/>
+     <input type="button" value="查找患者"   ng-click="load_patient_by_name()"  /> 
     <br/>
     性别: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_3"  ng-model="fields.sex"   required/> 
     <br/>
@@ -71,9 +72,15 @@
       $scope.fields.patient_no = temp_no;
     };
 
+    $scope.clear2 = function(){
+      var temp_name = $scope.fields.name;
+      $scope.init();
+      $scope.fields.name = temp_name;
+    };
+
     $scope.init();
     
-    $scope.load_patient = function(){
+    $scope.load_patient_by_no = function(){
       $scope.clear();
       
       var conn = getConn();
@@ -98,6 +105,39 @@
             console.log( rows );
             $scope.clear();
             show_err_msg("这个病历号在数据库中不存在。");
+          }
+        }
+      });
+      conn.end();
+      
+    };
+
+    $scope.load_patient_by_name = function(){
+      $scope.clear2();
+      
+      var conn = getConn();
+      conn.connect();
+      var sql_str = "SELECT * from t_customer where patient_name='" + $scope.fields.name + "'";
+      conn.query( sql_str, 
+        function(err, rows, fields) {
+        if (err) {
+          console.log( err );
+        }else{
+          //console.log( rows );
+          if( rows.length === 1 ){
+            var obj = rows[0];
+            $scope.fields.patient_id = obj.id;
+            $scope.fields.patient_no = obj.patient_no;
+            //$scope.fields.name = obj.patient_name;
+            $scope.fields.mobile = obj.mobile;
+            $scope.fields.age = obj.age;
+            $scope.fields.sex = obj.sex;
+            $scope.fields.remark = obj.remark;
+            $scope.$apply();
+          }else{
+            console.log( rows );
+            $scope.clear();
+            show_err_msg("这个患者姓名在数据库中不存在。");
           }
         }
       });
