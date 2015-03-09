@@ -20,7 +20,7 @@
     <br>
     <li ng-repeat="name in new_filenames " >
         <span ng-click="showJson(name)"> {{name}} </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button ng-show="!noDB" ng-click="save2db(name)">保存到数据库</button>  <br><br>
+        <button ng-show="!noDB" ng-click="save2db(name)" ng-disabled="progress"  >保存到数据库</button>  <br><br>
     </li>
     <br><br><br><br><br><br><br><br>
   </div>
@@ -32,6 +32,7 @@ var dbApp = angular.module('dbApp', []);
 
 function Ctrl($scope) {
   $scope.message = "......";
+  $scope.progress = false;
   var run_msg = "";
   var run_flag = false;
 
@@ -67,6 +68,7 @@ function Ctrl($scope) {
   
   
   $scope.save2db = function(filename) {
+    $scope.progress = true;
     console.log(filename);
     var fullpath = evnPath + "data/case/" + filename;
     cmd_str = 'python 2db.py "' + fullpath + '"';
