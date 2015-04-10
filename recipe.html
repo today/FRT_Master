@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 处方修改</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/app.css">
+  <style type="text/css">
+    input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
+      background-color: yellow;
+    }
+  </style>
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="recipeApp" ng-controller="Ctrl">
+  
+  <h1 style="">福润堂 <a href="index.html" style="float:right">导航页</a></h1> 
+  <h2>处方修改</h2>
+
+  <div ng-repeat="img in photos" class="to_top"  >
+        <img src="old_photos/{{img}}" width="600" height="800">
+  </div>
+  <table border="0" style="float:right;"><tr>
+   
+    <td>
+    <form name="form_1"  >
+      
+      门诊号: <input  type="text"   ng-model="recipe_no" style="width:100px" autofocus ng-trim="true" />
+      <input type="button" value=" 载入处方信息 "   ng-click="load_recipe()"   />
+      <input type="button" value="模糊查询"   ng-click="go_search()"  style="float:right;" />
+      <br><br>
+
+      <div>
+        病历号: <input  type="text" id="id_1"  ng-model="newdata.case.patient_no"  style="width:100px"  readonly />
+        姓名:   <input  type="text" id="id_2"  ng-model="newdata.case.patient_name"       style="width:60px"  readonly /> 
+        <br/>
+        性别:   <input  type="text"  id="id_3"   ng-model="newdata.case.sex"             style="width:20px" readonly />
+        年龄:   <input  type="text"  id="id_4"   ng-model="newdata.case.age"           style="width:30px"  readonly />
+        电话:   <input  type="text"  id="id_5"   ng-model="newdata.case.mobile"   style="width:100px" readonly />
+        <br/>
+        备注:   <textarea        ng-model="newdata.case.patient_comment"   readonly   ></textarea>
+        <br/>
+        医生:   <input  type="text"   ng-model="newdata.case.doctor_name"       style="width:60px"  readonly /> 
+      </div>
+      <div >
+        
+        定病:     <input  type="text"  id="id_8"   ng-model="newdata.case.dingbing"     style="width:300px"   required ng-trim="true"  /><br/>
+        定性:     <input  type="text"  id="id_9"   ng-model="newdata.case.dingxing"     style="width:300px"   required ng-trim="true"  /><br/>
+        定症:     <input  type="text"  id="id_10"   ng-model="newdata.case.dingzheng"    style="width:300px"   required ng-trim="true" /><br/>
+        备注:     <textarea            id="id_11"   ng-model="newdata.case.comment"      style="width:300px"   ></textarea><br/>
+        
+        <div style="float:left;">处方:&nbsp;</div>
+        <table border="1" >
+          <tr><td></td><td>药名</td><td>用量</td><td>单位</td></tr>  
+
+          <tr ng-repeat="obj in newdata.case.recipe">
+            <td>&nbsp; {{$index+1}} &nbsp; </td>
+            <td><input  type="text"      ng-model="obj.medicine_name"   style="width:100px"  required ng-trim="true" /></td>
+            <td><input  type="number"    ng-model="obj.count"      style="width:40px" 
+            min="0"  required ng-trim="true" /></td>
+            <td><input  type="text"      ng-model="obj.unit"       style="width:30px"   required ng-trim="true" /></td>
+          </tr>
+          <tr><td colspan="4">
+              <input type="button" value="再加10行"    style="float:right;"    ng-click="addRecipeItem(10)" />
+            </td></tr>
+        </table>
+        </div>
+        <div >
+        抓药数量:  <input  type="text"  id="id_0"   ng-model="newdata.case.suitcount"      style="width:75px"    required required ng-trim="true" />
+        </div>
+        <div>
+        <div style="float:bottom;">
+
+          <input type="button" value=" 保存处方信息 "   ng-click="saveCase()"   />
+    
+        </div>
+
+      </div>
+    </form>
+    </td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+</table>
+<h1 id="auto_hide_msg" ng-show="flag_save_sucess" >保存成功</h1>
+  
+<script type="text/javascript">
+  var recipeApp = angular.module('recipeApp', []);
+
+  function Ctrl($scope) {
+    var fs = require('fs');
+    var _ = require('underscore');
+
+    $scope.newdata = {};
+    $scope.newdata.patients = {};
+    $scope.newdata.patients.image = "head.jpg";
+    $scope.newdata.case = {};
+    $scope.flag_save_sucess = false;
+
+    $scope.id_index = 11;
+
+    $scope.photos = [];
+    $scope.photos[0] = "abc.jpg";
+    
+    //alert(params[0]);
+    
+    $scope.recipe_no = "xfz2015-3-22_8_56_20";
+    
+    $scope.old_readonly = false;
+    $scope.old_show = false;
+
+    $scope.newdata.case.recipe = [];
+    $scope.addRecipeItem = function( lineNum ){
+      for(i=1;i<(lineNum+1);i++){
+        tempObj = {};
+        tempObj.index_id=i;
+        tempObj.medicine="";
+        tempObj.count=0;
+        tempObj.unit="克";
+        tempObj.remark="";
+
+        $scope.newdata.case.recipe.push(tempObj);
+        //console.log(JSON.stringify(tempObj));
+      }
+    };
+    $scope.addRecipeItem(1);
+    
+
+    $scope.saveCase = function() {
+      if ($scope.form_1.$valid) {
+        //alert('输入正确。');
+        //return;
+      } else {
+        alert('输入错误，请检查。');
+        return;
+      }
+      
+      
+      var aStr = JSON.stringify($scope.newdata);
+      // Write a file:
+      console.log( "aStr = ###" + aStr + "###" );
+      fs.writeFileSync('data/case/c'+ $scope.newdata.case.case_no +'.json', aStr);
+
+      $scope.flag_save_sucess = true;
+
+      setTimeout(function(){
+                              $scope.flag_save_sucess = false;
+                              window.location.href = "bookinglist.html?" + $scope.newdata.case.case_no;
+                            },1000);
+    };
+
+    
+    $scope.load_recipe = function() {
+      if (isblank($scope.recipe_no)) {
+        alert('请先输入门诊号');
+        return;
+      }
+
+      var conn = getConn();
+      conn.connect();
+      var sql1 = "SELECT json_id from t_recipe where recipe_no='" + $scope.recipe_no + "'";
+      console.log( sql1 );
+      conn.query(sql1, 
+        function(err, rows, fields) {
+        if (err) {
+          console.log( err );
+        }else{
+          //console.log( rows );
+          if( rows.length === 1 ){
+            var obj = rows[0];
+            var json_id = obj.json_id;
+
+
+            var sql2 = "select json_string from t_json where  id='"+ json_id + "' ";
+            console.log( sql2 );
+            conn.query( sql2 , 
+              function(err, rows, fields) {
+                if (err) {
+                  console.log( err );
+                }else{
+                  var obj2 = rows[0];
+                  var json_str = obj2.json_string;
+                  $scope.newdata.case = JSON.parse(json_str);
+                  console.log( $scope.newdata.case );
+                  $scope.$apply();
+                }
+              });
+
+          }else{
+            console.log( rows );
+            show_err_msg("这个门诊号在数据库中不存在。");
+          }
+        }
+      });
+      //conn.end();
+    };
+
+    $scope.go_search = function() {
+      window.location.href = "search_recipe.html";
+    };
+
+   
+      
+  }
+  
+
+
+  </script>
+</body>
+</html>
+
+
+
+

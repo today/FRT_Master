@@ -4,8 +4,6 @@ body {
   padding-top: 10px;padding-left:10px; padding-right:10px; 
 }
 
-
-
 h1 {
   border-bottom: 1px solid gray;
 }
@@ -43,3 +41,33 @@ input[disabled]
   color: #CCCCCC;
   
 }
+
+.to_top {
+	float: left;             
+    margin: 1px 1px 1px 1px;
+    padding: 1px;
+    border: 1px solid silver;
+           
+    box-shadow: 0px 0px 1px #000;
+    -moz-box-shadow: 0px 0px 5px #000;
+    -webkit-box-shadow: 0px 0px 5px #000;
+
+    top:1;/*最上*/             
+    color: #3E3E3E;
+    left: 0;
+    position: fixed;
+    text-align: left;
+    
+    z-index: 10000;
+    overflow:visible;
+}
+
+
+
+
+
+
+
+
+
+
