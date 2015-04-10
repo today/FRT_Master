@@ -114,7 +114,12 @@ if os.path.exists( jsonfilename) :
       saveRecipe( recipeObject )
 
       # 处理完的文件，移动到另外的文件夹
-      shutil.move( jsonfilename, '../backup/input/case_saved/' )
+
+      shutil.copy2( jsonfilename, '../backup/input/case_saved/' )
+      os.remove(jsonfilename)
+
+
+
   except Exception as inst:
       print type(inst)     # the exception instance
       print inst.args      # arguments stored in .args

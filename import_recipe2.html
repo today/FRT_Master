@@ -79,7 +79,7 @@ function Ctrl($scope) {
           console.log('exec error: ' + error);
         }
         console.log('stdout: ' + stdout);
-        //location.reload(true);
+        location.reload(true);
     });
 
     //移动处方图片
@@ -91,7 +91,10 @@ function Ctrl($scope) {
           console.log('exec error: ' + error);
         }
         console.log('stdout: ' + stdout);
-        location.reload(true);
+        setTimeout(function(){
+          console.log("reload page.");
+          //location.reload(true);
+        },1000);
     });
   };
 
