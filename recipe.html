@@ -18,7 +18,7 @@
   <h1 style="">福润堂 <a href="index.html" style="float:right">导航页</a></h1> 
   <h2>处方修改</h2>
 
-  <div ng-repeat="img in photos" class="to_top"  >
+  <div ng-repeat="img in newdata.case.images" class="to_top"  >
         <img src="old_photos/{{img}}" width="600" height="800">
   </div>
   <table border="0" style="float:right;"><tr>
@@ -99,12 +99,12 @@
 
     $scope.id_index = 11;
 
-    $scope.photos = [];
-    $scope.photos[0] = "abc.jpg";
+    
     
     //alert(params[0]);
     
-    $scope.recipe_no = "xfz2015-3-22_8_56_20";
+    $scope.recipe_no = "2014-5-27_1";
+    //$scope.recipe_no = "xfz2015-2-2_21_7_35";
     
     $scope.old_readonly = false;
     $scope.old_show = false;
@@ -136,7 +136,7 @@
       }
       
       
-      var aStr = JSON.stringify($scope.newdata);
+      var aStr = JSON.stringify($scope.newdata.case);
       // Write a file:
       console.log( "aStr = ###" + aStr + "###" );
       fs.writeFileSync('data/case/c'+ $scope.newdata.case.case_no +'.json', aStr);
@@ -180,7 +180,21 @@
                 }else{
                   var obj2 = rows[0];
                   var json_str = obj2.json_string;
-                  $scope.newdata.case = JSON.parse(json_str);
+                  var json_obj = JSON.parse(json_str);
+
+                  // 对旧结构的json进行转换处理。
+                  if(json_obj.patient_name){
+                    $scope.newdata.case = json_obj;
+                  }else{
+                    console.log("Old Struct.");
+
+                    for(var i=0; i<json_obj.recipe.length;i++){
+                      var item_obj = json_obj.recipe[i];
+                      item_obj.medicine_name = item_obj.medicine;
+                      console.log(item_obj);
+                    }
+                    $scope.newdata.case = json_obj;
+                  }
                   console.log( $scope.newdata.case );
                   $scope.$apply();
                 }
