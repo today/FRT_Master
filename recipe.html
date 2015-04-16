@@ -85,10 +85,10 @@
 <h1 id="auto_hide_msg" ng-show="flag_save_sucess" >保存成功</h1>
   
 <script type="text/javascript">
+
   var recipeApp = angular.module('recipeApp', []);
 
   function Ctrl($scope) {
-    var fs = require('fs');
     var _ = require('underscore');
 
     $scope.newdata = {};
@@ -97,17 +97,6 @@
     $scope.newdata.case = {};
     $scope.flag_save_sucess = false;
 
-    $scope.id_index = 11;
-
-    
-    
-    //alert(params[0]);
-    
-    $scope.recipe_no = "2014-5-27_1";
-    //$scope.recipe_no = "xfz2015-2-2_21_7_35";
-    
-    $scope.old_readonly = false;
-    $scope.old_show = false;
 
     $scope.newdata.case.recipe = [];
     $scope.addRecipeItem = function( lineNum ){
@@ -183,7 +172,7 @@
                   var json_obj = JSON.parse(json_str);
 
                   // 对旧结构的json进行转换处理。
-                  if(json_obj.patient_name){
+                  if(json_obj.zhaoling){
                     $scope.newdata.case = json_obj;
                   }else{
                     console.log("Old Struct.");
@@ -191,6 +180,7 @@
                     for(var i=0; i<json_obj.recipe.length;i++){
                       var item_obj = json_obj.recipe[i];
                       item_obj.medicine_name = item_obj.medicine;
+                      delete item_obj.medicine;
                       console.log(item_obj);
                     }
                     $scope.newdata.case = json_obj;
@@ -210,18 +200,46 @@
     };
 
     $scope.go_search = function() {
-      window.location.href = "search_recipe.html";
+      window.location.href = "find_recipe.html";
     };
 
-   
+    //alert(params[0]);
+    var url_param = location.href.substring(location.href.indexOf("?")+1);
+    $scope.recipe_no = url_param;
+    if ( !isblank($scope.recipe_no) ) {
+        $scope.load_recipe();
+    }
       
   }
   
 
 
-  </script>
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

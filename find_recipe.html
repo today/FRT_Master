@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>福润堂 查找处方</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/app.css">
+  <style type="text/css">
+    input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
+      background-color: yellow;
+    }
+  </style>
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="js/frt_master.js"></script>
+</head>
+<body ng-app="recipeApp" ng-controller="Ctrl">
+  
+  <h1 style="">福润堂 <a href="index.html" style="float:right">导航页</a></h1> 
+  <h2>查找处方</h2>
+
+      患者姓名: <input  type="text" ng-model="patient_name" style="width:50px"  ng-trim="true" />
+      病历号:   <input  type="text" ng-model="patient_no" style="width:50px"  ng-trim="true" autofocus />
+      电话号码: <input  type="text" ng-model="mobile" style="width:100px"  ng-trim="true" />
+      处方号:   <input  type="text" ng-model="recipe_no" style="width:120px"  ng-trim="true" />
+      <input type="submit" value=" 查找 "   ng-click="find_recipe()"   />
+      <div class="msg">{{msg}}</div>
+      
+      
+        <table border="1" width="80%">
+          <tr><th></th><th>处方号</th><th>病历号</th><th>姓名</th>
+          <th>性别</th><th>年龄</th><th>电话</th><th>&nbsp;定病.定性.定症&nbsp;</th><th></th></tr>
+
+          <tr ng-repeat="obj in data.recipes">
+            <td>&nbsp; {{$index+1}} &nbsp; </td>
+            <td>&nbsp; {{obj.recipe_no}} &nbsp; </td>
+            <td>&nbsp; {{obj.patient_no}} &nbsp; </td>
+            <td>&nbsp; {{obj.patient_name}} &nbsp; </td>
+            <td>&nbsp; {{obj.sex}} &nbsp; </td>
+            <td>&nbsp; {{obj.age}} &nbsp; </td>
+            <td>&nbsp; {{obj.mobile}} &nbsp; </td>
+            <td>&nbsp; {{obj.dingbing}} &nbsp; {{obj.dingxing}} &nbsp; {{obj.dingzheng}}</td>
+            <td><input type="button" value="修改" ng-click="go_edit(obj.recipe_no)"></td>
+          </tr>
+        </table><br><br>
+       
+<h1 id="auto_hide_msg" ng-show="flag_save_sucess" >保存成功</h1>
+  
+<script type="text/javascript">
+
+  var recipeApp = angular.module('recipeApp', []);
+
+  function Ctrl($scope) {
+    
+    $scope.msg = "";
+    $scope.data = {};
+    $scope.data.recipes = [];
+    $scope.patient_name = "";
+    $scope.patient_no = "";
+    $scope.mobile = "";
+    $scope.recipe_no = "";
+    
+    $scope.go_edit = function( recipe_no ) {
+      window.location.href = "recipe.html?" + recipe_no;
+    };
+
+    
+    $scope.find_recipe = function() {
+      if ( isblank($scope.patient_name) && isblank($scope.patient_no) && 
+           isblank($scope.mobile) && isblank($scope.recipe_no) ) {
+        alert('请先输入查询条件');
+        return;
+      }
+
+      $scope.data.recipes = [];
+      $scope.msg = "开始查找";
+
+      // 构造查询语句
+      var condition1 = "";
+      if( ! isblank($scope.patient_name)  ){
+        condition1 = " AND patient_name like '%" + $scope.patient_name + "%' ";
+      }
+
+      var condition2 = "";
+      if( ! isblank($scope.patient_no)  ){
+        condition2 = " AND patient_no='" + $scope.patient_no + "' ";
+      }
+
+      var condition3 = "";
+      if( ! isblank($scope.mobile)  ){
+        condition3 = " AND mobile like '%" + $scope.mobile + "%' ";
+      }
+
+      var condition4 = "";
+      if( ! isblank($scope.recipe_no)  ){
+        condition4 = " AND recipe_no like '%" + $scope.recipe_no + "%' ";
+      }
+
+      var conn = getConn();
+      conn.connect();
+      var sql1 = "SELECT * from t_recipe where 1=1 " + 
+                         condition1 + condition2 + condition3 + condition4 + " limit 30";
+      //console.log( sql1 );
+      conn.query(sql1, 
+        function(err, rows, fields) {
+          if (err) {
+            console.log( err );
+          }else{
+            if( rows.length === 0 ){
+              $scope.msg="没有找到符合条件的记录。";
+            }else{
+              $scope.msg="找到符合条件的记录，显示" + rows.length + "条。";
+            }
+
+            for(var i in rows ){
+              $scope.data.recipes.push(rows[i]);
+            }
+          
+
+            //console.log( $scope.data.recipes );
+            //console.log( $scope.data.recipes[0].age );
+          }
+
+
+          $scope.$apply();
+          console.log( sql1 );
+      });
+      
+    };
+   
+      
+  }
+  
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
