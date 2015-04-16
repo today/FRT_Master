@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>RefluxSoft Learn & Test</title>
+  
+  <style type="text/css">
+    input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
+      background-color: yellow;
+    }
+  </style>
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="js/model.js"></script>
+</head>
+<body ng-app="testApp" ng-controller="Ctrl">
+  
+  <h1 style="">RefluxSoft  <a href="index.html" style="float:right">导航页</a></h1> 
+  <h2>Learn & Test</h2>
+
+  
+          <input type="button" value=" 填充对象 "   ng-click="go_fill_obj()"   /> 填充效果在 console 中查看。
+    
+        
+  
+<script type="text/javascript">
+  var testApp = angular.module('testApp', []);
+
+  function Ctrl($scope) {
+    
+
+    $scope.go_fill_obj = function() {
+        var obj = getCaseModel();
+        var obj2 = getCaseModel();
+
+        delete obj2.mobile;
+        delete obj2.age;
+        delete obj2.sex;
+
+        for( var o in obj ){
+            if(obj2.hasOwnProperty(o)){
+              console.log( o + " exist.");
+            }else{
+              console.log( o + " not exist.");
+              obj2[o] = obj[o];
+            }
+        }
+        console.log( obj2 );
+    };
+
+   
+      
+  }
+  
+
+
+  </script>
+</body>
+</html>
+
+
+
+
