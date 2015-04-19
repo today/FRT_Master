@@ -1,7 +1,7 @@
 /* app css stylesheet */
 
 body {
-  padding-top: 10px;padding-left:10px; padding-right:10px; 
+  padding-top: 1px;padding-left:10px; padding-right:10px; 
 }
 
 h1 {
@@ -45,8 +45,8 @@ input[disabled]
 
 .to_top {
 	float: left;             
-    margin: 1px 1px 1px 1px;
-    padding: 1px;
+    margin: 1px 10px 10px 20px;   /*  上 右 下 左  */
+    padding: 0px 5px 5px 15px;
     border: 1px solid silver;
            
     box-shadow: 0px 0px 1px #000;
