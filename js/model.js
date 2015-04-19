@@ -1,4 +1,23 @@
 
+/*       */
+var fill_obj = function() {
+    
+    if( obj === null || obj2 === null ){
+    	return -1;
+    }
+    else{
+	    for( var o in obj ){
+	        if(obj2.hasOwnProperty(o)){
+	          console.log( o + " exist.");
+	        }else{
+	          console.log( o + " not exist.");
+	          obj2[o] = obj[o];
+	        }
+	    }
+	    console.log( obj2 );
+	    return 0;
+    }
+};
 
 function getRecipeModel(){
 	var model = {};
@@ -50,6 +69,7 @@ function getMedicineModel(){
 
 	return medicine;
 }
+
 
 
 
