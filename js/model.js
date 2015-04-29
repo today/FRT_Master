@@ -1,6 +1,6 @@
 
 /*       */
-var fill_obj = function() {
+var fill_obj = function(obj, obj2) {
     
     if( obj === null || obj2 === null ){
     	return -1;
@@ -14,7 +14,7 @@ var fill_obj = function() {
 	          obj2[o] = obj[o];
 	        }
 	    }
-	    console.log( obj2 );
+	    //console.log( obj2 );
 	    return 0;
     }
 };
