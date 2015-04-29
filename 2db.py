@@ -55,12 +55,12 @@ def saveRecipe( recipeObj ):
       #print "aaa"
       sql4 = "INSERT INTO `t_recipe` ( `recipe_no`, `patient_id`, `patient_no`, " \
             + "`patient_name`, `mobile`, `age`, `sex`, `patient_comment`, " \
-            + "`dingxing`, `dingbing`, `dingzheng`, `comment`, " + "`suitnum`, `json_id`) VALUES " \
+            + "`dingxing`, `dingbing`, `dingzheng`, `comment`, " + "`suitnum`, `json_id`, `doctor_name`) VALUES " \
             + " ( '"+ caseObj['case_no'] + "', '" + "0" +"', '" + str(caseObj['patient_no']) \
             + "', '" + caseObj['patient_name'] + "', '"+ str(caseObj['mobile']) + "', '" + str(caseObj['age'])  \
             + "', '" + caseObj['sex'] + "', '"+ caseObj['patient_comment'] + "', '" + caseObj['dingxing']  \
             + "', '"+ caseObj['dingbing'] + "', '"+ caseObj['dingzheng'] +"', '"+ caseObj['comment']  \
-            + "', '"+ caseObj['suitnum'] + "', '"+ str(temp_c_json_id) +"' )"
+            + "', '"+ caseObj['suitnum'] + "', '"+ str(temp_c_json_id) + "', '"+ caseObj['doctor_name'] +"' )"
       #print "sql4:" + sql4
       cur.execute(sql4)
       temp_c_id = conn.insert_id()
