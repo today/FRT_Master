@@ -49,6 +49,18 @@ function getYMD( aDate ){
 
 }
 
+function getYMDHMS(){
+	var temp_now = new Date();
+	var year = temp_now.getFullYear();
+	var month = temp_now.getMonth()+1;
+	var day = temp_now.getDate();
+	var h = temp_now.getHours();
+	var m = temp_now.getMinutes();
+	var s = temp_now.getSeconds();
+
+	return ""+year+month+day+h+m+s;
+}
+
 function isblank(strA){
 	if(strA){
 		if( "string" === typeof(strA) ){
