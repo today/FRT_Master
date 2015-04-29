@@ -96,7 +96,7 @@
       var conn = getConn();
       conn.connect();
       var sql1 = "SELECT * from t_recipe where 1=1 " + 
-                         condition1 + condition2 + condition3 + condition4 + " limit 30";
+                         condition1 + condition2 + condition3 + condition4 + " ORDER BY recipe_no DESC limit 30";
       //console.log( sql1 );
       conn.query(sql1, 
         function(err, rows, fields) {
