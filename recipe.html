@@ -12,6 +12,7 @@
   </style>
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="js/frt_master.js"></script>
+  <script type="text/javascript" src="js/model.js"></script>
 </head>
 <body ng-app="recipeApp" ng-controller="Ctrl">
   
@@ -116,29 +117,49 @@
     
 
     $scope.saveCase = function() {
-      if ($scope.form_1.$valid) {
-        //alert('输入正确。');
-        //return;
-      } else {
-        alert('输入错误，请检查。');
-        return;
-      }
       
-      
-      var aStr = JSON.stringify($scope.newdata.case);
+      var aStr = JSON.stringify($scope.newdata);
+      var temp_case_no = $scope.newdata.case.case_no;
+      var time_stamp = getYMDHMS();
+      var filename = 'data/modify/modify_c'+ temp_case_no + "_" + time_stamp +'.json';
       // Write a file:
-      console.log( "aStr = ###" + aStr + "###" );
-      fs.writeFileSync('data/case/c'+ $scope.newdata.case.case_no +'.json', aStr);
+      //console.log( "aStr = ###" + aStr + "###" );
+      fs.writeFileSync( filename, aStr);
 
-      $scope.flag_save_sucess = true;
+      // 删除旧的处方信息，不做真的删除，改主键的内容
+      // UPDATE t_recipe SET recipe_no=concat(recipe_no , '_v1') WHERE  recipe_no='2014-5-27_1'
+      var conn = getConn();
+      conn.connect();
+      var sql1 = "INSERT INTO  t_recipe_bak (recipe_no,patient_id,patient_no,patient_name,mobile,age,sex,patient_comment,dingxing,dingbing,dingzheng,COMMENT,suitnum,doctor_name,json_id)  (SELECT recipe_no,patient_id,patient_no,patient_name,mobile,age,sex,patient_comment,dingxing,dingbing,dingzheng,COMMENT,suitnum,doctor_name,json_id FROM t_recipe WHERE  recipe_no='" + temp_case_no + "' );" +
+        " DELETE FROM t_recipe WHERE  recipe_no='" + temp_case_no + "'";
+      console.log( sql1 );
+      conn.query(sql1, 
+        function(err, res) {
+          if (err) {
+            console.log( err );
+          }else{
 
-      setTimeout(function(){
-                              $scope.flag_save_sucess = false;
-                              window.location.href = "bookinglist.html?" + $scope.newdata.case.case_no;
-                            },1000);
+
+            console.log( res );
+            // 调用python脚本，插入数据。
+            cmd_str = 'python 2db_v2.py "' + filename + '"';
+            console.log(cmd_str);
+            process.exec(cmd_str ,
+              function (error, stdout, stderr) {
+                if (error !== null) {
+                  console.log('exec error: ' + error);
+                }
+                console.log('stdout: ' + stdout);
+                
+            });
+          }
+      });
+      conn.end();
+
+
+      
     };
 
-    
     $scope.load_recipe = function() {
       if (isblank($scope.recipe_no)) {
         alert('请先输入门诊号');
@@ -169,19 +190,23 @@
                 }else{
                   var obj2 = rows[0];
                   var json_str = obj2.json_string;
+                  console.log( json_str );
                   var json_obj = JSON.parse(json_str);
 
                   // 对旧结构的json进行转换处理。
-                  if(json_obj.zhaoling){
+                  if( _.has(json_obj, "zhaoling") ){
                     $scope.newdata.case = json_obj;
                   }else{
                     console.log("Old Struct.");
+                    var case_obj = getCaseModel();
+                    fill_obj(case_obj, json_obj);
+                    console.log(json_obj);
 
                     for(var i=0; i<json_obj.recipe.length;i++){
                       var item_obj = json_obj.recipe[i];
                       item_obj.medicine_name = item_obj.medicine;
                       delete item_obj.medicine;
-                      console.log(item_obj);
+                      //console.log(item_obj);
                     }
                     $scope.newdata.case = json_obj;
                   }
