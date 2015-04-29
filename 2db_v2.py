@@ -8,7 +8,10 @@ import sys
 import shutil
 
 def saveRecipe( recipeObj ):
-  patientObj = recipeObj['patient']
+  patientObj = {}
+  if 'patient' in recipeObj.keys():
+    patientObj = recipeObj['patient']
+  
   caseObj = recipeObj['case']
 
   setDefValue( caseObj, ( 'case_no','mobile','patient_no','patient_name','age','sex','patient_comment','dingxing','dingbing' , 'dingzheng','suitnum','comment') )
