@@ -20,6 +20,7 @@
   <h2>处方修改</h2>
 
   <div ng-repeat="img in newdata.case.images" class="to_top"  >
+        {{img}}<br>
         <img src="old_photos/{{img}}" width="600" height="800">
   </div>
   <table border="0" style="float:right;"><tr>
@@ -138,8 +139,6 @@
           if (err) {
             console.log( err );
           }else{
-
-
             console.log( res );
             // 调用python脚本，插入数据。
             cmd_str = 'python 2db_v2.py "' + filename + '"';
@@ -150,7 +149,8 @@
                   console.log('exec error: ' + error);
                 }
                 console.log('stdout: ' + stdout);
-                
+                alert("修改保存成功。");
+                window.location.href = "find_recipe.html";
             });
           }
       });
@@ -169,7 +169,7 @@
       var conn = getConn();
       conn.connect();
       var sql1 = "SELECT json_id from t_recipe where recipe_no='" + $scope.recipe_no + "'";
-      console.log( sql1 );
+      //console.log( sql1 );
       conn.query(sql1, 
         function(err, rows, fields) {
         if (err) {
@@ -182,7 +182,7 @@
 
 
             var sql2 = "select json_string from t_json where  id='"+ json_id + "' ";
-            console.log( sql2 );
+            //console.log( sql2 );
             conn.query( sql2 , 
               function(err, rows, fields) {
                 if (err) {
@@ -190,7 +190,7 @@
                 }else{
                   var obj2 = rows[0];
                   var json_str = obj2.json_string;
-                  console.log( json_str );
+                  //console.log( json_str );
                   var json_obj = JSON.parse(json_str);
 
                   // 对旧结构的json进行转换处理。
@@ -200,7 +200,7 @@
                     console.log("Old Struct.");
                     var case_obj = getCaseModel();
                     fill_obj(case_obj, json_obj);
-                    console.log(json_obj);
+                    //console.log(json_obj);
 
                     for(var i=0; i<json_obj.recipe.length;i++){
                       var item_obj = json_obj.recipe[i];
@@ -210,7 +210,6 @@
                     }
                     $scope.newdata.case = json_obj;
                   }
-                  console.log( $scope.newdata.case );
                   $scope.$apply();
                 }
               });
