@@ -8,9 +8,9 @@ var fill_obj = function(obj, obj2) {
     else{
 	    for( var o in obj ){
 	        if(obj2.hasOwnProperty(o)){
-	          console.log( o + " exist.");
+	          //console.log( o + " exist.");
 	        }else{
-	          console.log( o + " not exist.");
+	          //console.log( o + " not exist.");
 	          obj2[o] = obj[o];
 	        }
 	    }
