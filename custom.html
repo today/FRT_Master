@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" >
   <title>福润堂 预约</title>
-  
+  <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/app.css">
   <style type="text/css">
     input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
@@ -16,20 +16,25 @@
 </head>
 <body ng-app="ngApp" ng-controller="Ctrl" >
   
-  <h1 style="">
-    福润堂 患者管理    
-  </h1> 
+  <h1>福润堂 <a href="index.html" style="float:right">导航页</a></h1> 
+  <h2>患者信息修改</h2>
+
+  <br>
+  病历号: <input  type="text" id="id_1" style="width:60px" ng-model="patient_no"    />  &nbsp;&nbsp;
+  
+    姓名: <input  type="text" id="id_2"  style="width:60px"  ng-model="patient_name" /> &nbsp;&nbsp;
+    联系电话: <input  type="text" id="id_2"  style="width:120px"  ng-model="mobile" /> &nbsp;&nbsp;
+    <input type="button" value="查找患者"  ng-click="load_patient()"  /> 
+    <hr>
   <div class='to_top'   >
-    <h3 style="display:none;">请一定要先执行 
-      <a href="import_custom.html">新患者数据导入</a>  操作，否则会造成病历号重复。
-    </h3>
+
+  <h3>
     
-    <h3>
+    <br>
     病历号:     <input  type="text" id="id_1"  ng-model="fields.patient_no"  required  /> 
-    <input type="button" value="查找患者"   ng-click="load_patient_by_no()"  /> 
     <br/>
-    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.name" required/>
-     <input type="button" value="查找患者"   ng-click="load_patient_by_name()"  /> 
+    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.patient_name" required/>
+     
     <br/>
     性别: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_3"  ng-model="fields.sex"   required/> 
     <br/>
@@ -44,95 +49,108 @@
     </h3>
   
   </div>
-  
+
+  <table border="1" style="float:right;" width="60%">
+    <tr><th></th><th>病历号</th><th>姓名</th>
+    <th>性别</th><th>年龄</th><th>电话</th><th></th></tr>
+
+    <tr ng-repeat="obj in customers">
+      <td>&nbsp; {{$index+1}} &nbsp; </td>
+      <td>&nbsp; {{obj.patient_no}} &nbsp; </td>
+      <td>&nbsp; {{obj.patient_name}} &nbsp; </td>
+      <td>&nbsp; {{obj.sex}} &nbsp; </td>
+      <td>&nbsp; {{obj.age}} &nbsp; </td>
+      <td>&nbsp; {{obj.mobile}} &nbsp; </td>
+      <td><input type="button" value="修改" ng-click="go_edit($index)"></td>
+    </tr>
+  </table>
+
   <script type="text/javascript">
   
   var inputApp = angular.module('ngApp', []);
 
   function Ctrl($scope, $http) {
+
     
     $scope.init = function(){
       $scope.fields = {};
-      $scope.datas = {};
+      $scope.customers = [];
+      $scope.patient_no = "";
+      $scope.patient_name = "";
+      $scope.mobile = "";
       
-      $scope.flag_msg_show = false;
+      $scope.clear();
+    };
 
+    $scope.clear = function(){
       $scope.fields.patient_id = "";
       $scope.fields.patient_no = "";
-      $scope.fields.name = "";
+      $scope.fields.patient_name = "";
       $scope.fields.mobile = "";
       $scope.fields.age = "";
       $scope.fields.sex = "";
       $scope.fields.remark = "";
     };
 
-    $scope.clear = function(){
-      var temp_no = $scope.fields.patient_no;
-      $scope.init();
-      $scope.fields.patient_no = temp_no;
-    };
-
     $scope.clear2 = function(){
-      var temp_name = $scope.fields.name;
-      $scope.init();
-      $scope.fields.name = temp_name;
+      $scope.customers = [];
+      $scope.clear();
     };
 
     $scope.init();
     
-    $scope.load_patient_by_no = function(){
-      $scope.clear();
-      
-      var conn = getConn();
-      conn.connect();
-      conn.query("SELECT * from t_customer where patient_no='" + $scope.fields.patient_no + "'", 
-        function(err, rows, fields) {
-        if (err) {
-          console.log( err );
-        }else{
-          //console.log( rows );
-          if( rows.length === 1 ){
-            var obj = rows[0];
-            $scope.fields.patient_id = obj.id;
-            //$scope.fields.patient_no = "";
-            $scope.fields.name = obj.patient_name;
-            $scope.fields.mobile = obj.mobile;
-            $scope.fields.age = obj.age;
-            $scope.fields.sex = obj.sex;
-            $scope.fields.remark = obj.remark;
-            $scope.$apply();
-          }else{
-            console.log( rows );
-            $scope.clear();
-            show_err_msg("这个病历号在数据库中不存在。");
-          }
-        }
-      });
-      conn.end();
-      
+    $scope.go_edit = function( index ) {
+      var obj = $scope.customers[index];
+      $scope.fields.patient_id = obj.id;
+      $scope.fields.patient_no = obj.patient_no;
+      $scope.fields.patient_name = obj.patient_name;
+      $scope.fields.mobile = obj.mobile;
+      $scope.fields.age = obj.age;
+      $scope.fields.sex = obj.sex;
+      $scope.fields.remark = obj.remark;
+      //$scope.$apply();
     };
 
-    $scope.load_patient_by_name = function(){
+    $scope.load_patient = function(){
+      // 构造查询语句
+      var condition1 = "";
+      //console.log($scope.fields.patient_name);
+      if( ! isblank($scope.patient_name)  ){
+        condition1 = " AND patient_name like '%" + $scope.patient_name + "%' ";
+      }
+
+      var condition2 = "";
+      //console.log($scope.fields.patient_no);
+      if( ! isblank($scope.patient_no)  ){
+        condition2 = " AND patient_no='" + $scope.patient_no + "' ";
+      }
+
+      var condition3 = "";
+      if( ! isblank($scope.mobile)  ){
+        condition3 = " AND mobile like '%" + $scope.mobile + "%' ";
+      }
+
       $scope.clear2();
       
       var conn = getConn();
       conn.connect();
-      var sql_str = "SELECT * from t_customer where patient_name='" + $scope.fields.name + "'";
+      var sql_str = "SELECT * from t_customer where 1=1 " + condition1 + condition2 + condition3 +
+                    " ORDER BY patient_no DESC limit 30";
+
       conn.query( sql_str, 
         function(err, rows, fields) {
         if (err) {
           console.log( err );
         }else{
           //console.log( rows );
-          if( rows.length === 1 ){
-            var obj = rows[0];
-            $scope.fields.patient_id = obj.id;
-            $scope.fields.patient_no = obj.patient_no;
-            //$scope.fields.name = obj.patient_name;
-            $scope.fields.mobile = obj.mobile;
-            $scope.fields.age = obj.age;
-            $scope.fields.sex = obj.sex;
-            $scope.fields.remark = obj.remark;
+          if( rows.length >0 ){
+
+            for(var i in rows ){
+              $scope.customers.push(rows[i]);
+            }
+            //console.log($scope.customers);
+
+           $scope.go_edit(0);
             $scope.$apply();
           }else{
             console.log( rows );
@@ -142,7 +160,6 @@
         }
       });
       conn.end();
-      
     };
     
     $scope.save_patient = function() {
