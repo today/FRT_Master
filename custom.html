@@ -6,9 +6,7 @@
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/app.css">
   <style type="text/css">
-    input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
-      background-color: yellow;
-    }
+    
   </style>
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="node_modules/underscore/underscore.js"></script>
@@ -20,29 +18,25 @@
   <h2>患者信息修改</h2>
 
   <br>
-  病历号: <input  type="text" id="id_1" style="width:60px" ng-model="patient_no"    />  &nbsp;&nbsp;
-  
-    姓名: <input  type="text" id="id_2"  style="width:60px"  ng-model="patient_name" /> &nbsp;&nbsp;
-    联系电话: <input  type="text" id="id_2"  style="width:120px"  ng-model="mobile" /> &nbsp;&nbsp;
-    <input type="button" value="查找患者"  ng-click="load_patient()"  /> 
-    <hr>
+    病历号: <input  type="text"  style="width:60px" ng-model="patient_no"    />  &nbsp;&nbsp;
+    姓名: <input  type="text"   style="width:60px"  ng-model="patient_name" /> &nbsp;&nbsp;
+    联系电话: <input  type="text"   style="width:120px"  ng-model="mobile" /> &nbsp;&nbsp;
+    <input type="button" value="查找患者"  ng-click="load_patient()"  /><hr>
   <div class='to_top'   >
-
   <h3>
-    
     <br>
-    病历号:     <input  type="text" id="id_1"  ng-model="fields.patient_no"  required  /> 
+    病历号:     <input  type="text"   ng-model="fields.patient_no"  required  /> 
     <br/>
-    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_2"  ng-model="fields.patient_name" required/>
+    姓名: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text"  ng-model="fields.patient_name" required/>
      
     <br/>
-    性别: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_3"  ng-model="fields.sex"   required/> 
+    性别: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text"   ng-model="fields.sex"   required/> 
     <br/>
-    年龄: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text" id="id_4"  ng-model="fields.age"   required/>
+    年龄: &nbsp;&nbsp;&nbsp;&nbsp;<input  type="text"   ng-model="fields.age"   required/>
     <br/>
-    电话: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel" id="id_5" ng-model="fields.mobile" ng-pattern="/[0-9]/" required />
+    电话: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel"  ng-model="fields.mobile" ng-pattern="/[0-9]/" required />
     <br/>
-    备注: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel" id="id_6" ng-model="fields.remark"   />
+    备注: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel"  ng-model="fields.remark"   />
     <br/><br/>
        
     <input type="button" value=" 保存 "  ng-click="save_patient()"  /> 
@@ -112,6 +106,7 @@
     };
 
     $scope.load_patient = function(){
+      //console.log("start load");
       // 构造查询语句
       var condition1 = "";
       //console.log($scope.fields.patient_name);
@@ -150,7 +145,7 @@
             }
             //console.log($scope.customers);
 
-           $scope.go_edit(0);
+            $scope.go_edit(0);
             $scope.$apply();
           }else{
             console.log( rows );
@@ -165,14 +160,14 @@
     $scope.save_patient = function() {
 
       // 检查必选项，如果为空，不予保存
-      if(isblank($scope.fields.name) || isblank($scope.fields.patient_no)){
+      if(isblank($scope.fields.patient_name) || isblank($scope.fields.patient_no)){
         alert("病历号和姓名不能为空。");
         return false;
       }
 
       // 保存患者数据
       var strSql2 = "UPDATE t_customer SET  "  +
-             "patient_name='"+ $scope.fields.name +
+             "patient_name='"+ $scope.fields.patient_name +
              "', mobile='"+ $scope.fields.mobile +
              "', sex='"+ $scope.fields.sex +
              "', age='"+ $scope.fields.age +
@@ -187,14 +182,11 @@
           show_err_msg("程序出错");
         }else{
           show_msg("保 存 成 功");
-          $scope.init();
+          
         }
       });
       conn.end();
     };
-
-    
-
       
   }
 

@@ -12,6 +12,10 @@ hr {
   border-bottom: 1px solid gray;
 }
 
+input.ng-invalid.ng-dirty, input.ng-invalid.ng-invalid {
+      background-color: yellow;
+    }
+
 #AUTO_HIDE_MSG{
 	position: absolute;
 	width:300px;
