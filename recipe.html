@@ -190,27 +190,34 @@
                 }else{
                   var obj2 = rows[0];
                   var json_str = obj2.json_string;
-                  //console.log( json_str );
-                  var json_obj = JSON.parse(json_str);
+                  console.log( json_str );
+                  try{
+                    var json_obj = JSON.parse(json_str);
+                    // 对旧结构的json进行转换处理。
+                    if( _.has(json_obj, "zhaoling") ){
+                      $scope.newdata.case = json_obj;
+                    }else{
+                      console.log("Old Struct.");
+                      var case_obj = getCaseModel();
+                      fill_obj(case_obj, json_obj);
+                      //console.log(json_obj);
 
-                  // 对旧结构的json进行转换处理。
-                  if( _.has(json_obj, "zhaoling") ){
-                    $scope.newdata.case = json_obj;
-                  }else{
-                    console.log("Old Struct.");
-                    var case_obj = getCaseModel();
-                    fill_obj(case_obj, json_obj);
-                    //console.log(json_obj);
-
-                    for(var i=0; i<json_obj.recipe.length;i++){
-                      var item_obj = json_obj.recipe[i];
-                      item_obj.medicine_name = item_obj.medicine;
-                      delete item_obj.medicine;
-                      //console.log(item_obj);
+                      for(var i=0; i<json_obj.recipe.length;i++){
+                        var item_obj = json_obj.recipe[i];
+                        item_obj.medicine_name = item_obj.medicine;
+                        delete item_obj.medicine;
+                        //console.log(item_obj);
+                      }
+                      $scope.newdata.case = json_obj;
                     }
-                    $scope.newdata.case = json_obj;
+                    $scope.$apply();
+
+                  }catch(e){
+                    console.log("error" + error);
                   }
-                  $scope.$apply();
+                  //var json_obj = JSON.parse(json_str);
+
+                  
                 }
               });
 
