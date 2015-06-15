@@ -13,7 +13,8 @@
 ) DEFAULT CHARSET=utf8;
 CREATE INDEX i_customer_patient_no on t_customer(patient_no);
 ALTER TABLE `t_customer`
-ADD CONSTRAINT key_patient_no UNIQUE (`patient_no`); 
+ADD CONSTRAINT key_patient_no UNIQUE (`patient_no`);  
+ALTER TABLE `t_customer` ADD COLUMN `remark2` VARCHAR(256)  NULL  default '' AFTER `remark`;
 
    
     
