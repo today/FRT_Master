@@ -37,8 +37,9 @@
     电话: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel"  ng-model="fields.mobile" ng-pattern="/[0-9]/" required />
     <br/>
     备注: &nbsp;&nbsp;&nbsp;&nbsp;<input type="tel"  ng-model="fields.remark"   />
-    <br/><br/>
-       
+    <br/>
+    特别备注: &nbsp;&nbsp;<input type="tel"  ng-model="fields.remark2" style="width:185px"  />
+    <br/>  <br/>       
     <input type="button" value=" 保存 "  ng-click="save_patient()"  /> 
     </h3>
   
@@ -84,6 +85,7 @@
       $scope.fields.age = "";
       $scope.fields.sex = "";
       $scope.fields.remark = "";
+      $scope.fields.remark2 = "";
     };
 
     $scope.clear2 = function(){
@@ -102,6 +104,7 @@
       $scope.fields.age = obj.age;
       $scope.fields.sex = obj.sex;
       $scope.fields.remark = obj.remark;
+      $scope.fields.remark2 = obj.remark2;
       //$scope.$apply();
     };
 
@@ -171,13 +174,15 @@
              "', mobile='"+ $scope.fields.mobile +
              "', sex='"+ $scope.fields.sex +
              "', age='"+ $scope.fields.age +
-             "', remark='"+ $scope.fields.remark +"' " +
+             "', remark='"+ $scope.fields.remark +
+             "', remark2='"+ $scope.fields.remark2 +"' " +
              "  WHERE id='"+ $scope.fields.patient_id +"'" ;
       var conn = getConn();
       conn.connect();
       conn.query( strSql2, 
         function(err, rows, fields) {
         if (err) {
+          console.log( strSql2 );
           console.log( err );
           show_err_msg("程序出错");
         }else{
