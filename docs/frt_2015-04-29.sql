@@ -97,8 +97,9 @@ CREATE TABLE `t_json_temp` (
 CREATE TABLE `t_medicine` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `medicine_name` varchar(32) NOT NULL,
-  `price` varchar(32) NOT NULL,
   `short_name` varchar(32) NOT NULL,
+  `unit` varchar(16) NOT NULL,
+  `price` varchar(32) NOT NULL,
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `i_medicine_name` (`medicine_name`)
