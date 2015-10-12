@@ -12,7 +12,7 @@ def dumpToJson( ):
   try:
       conn = mydb.getConn()
       cur = conn.cursor( cursorclass=MySQLdb.cursors.DictCursor )
-      cur.execute('SELECT id,patient_no,patient_name,concat('****', right(mobile, 4)) as mobile,sex,age,remark FROM t_customer ')
+      cur.execute("SELECT id,patient_no,patient_name,concat('****', right(mobile, 4)) as mobile,sex,age,remark FROM t_customer ")
       rs = cur.fetchall()
       bigJson = json.dumps(rs, ensure_ascii=False,indent=2)
       cur.close()
