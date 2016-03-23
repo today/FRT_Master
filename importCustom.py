@@ -44,8 +44,8 @@ def saveCustom( customs ):
             + "`patient_name`=%s, `mobile`=%s, `sex`=%s, `age`=%s, `remark`=%s "  \
             + "  WHERE patient_no=%s" 
           #print strSql2
-          cur.execute( strSql2, values )
-          conn.commit()
+          #cur.execute( strSql2, values )
+          #conn.commit()
         else :
           # 不存在，执行insert
           values = getVals(custom, ['patient_no', 'patient_name', 'mobile','sex','age','remark'])
